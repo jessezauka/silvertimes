@@ -1,0 +1,47 @@
+{% extends "base_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+{% block content %}
+<main class="container my-4 pt-5">
+        <section class="text-center">
+            <!-- Page Title -->
+            <h1 class="mb-4">{{ page.seo_title|default:page.title }}</h1>
+            
+            <!-- Page Description -->
+            <p> {{ page.intro|richtext }}</p>
+        </section>
+    </main>
+
+<section class="container my-5" style="max-width: 900px;">
+  <div class="row">
+    {% for g in galleries %}
+      {% pageurl g as g_url %}
+      <div class="col-md-4 pb-3">
+        <div class="card">
+          <a href="{{ g_url }}" class="gallery-link">
+            <div class="image-container">
+              {% if g.cover_image %}
+                {% image g.cover_image fill-274x274 format-webp as thumb %}
+                <img
+                  src="{{ thumb.url }}"
+                  width="{{ thumb.width }}" height="{{ thumb.height }}"
+                  class="card-img-top"
+                  alt="{{ g.seo_title|default:g.title }}"
+                  loading="lazy">
+              {% else %}
+                <img src="{% static 'pictures/photo1.jpg' %}"
+                     class="card-img-top"
+                     alt="{{ g.title }}" loading="lazy">
+              {% endif %}
+
+              <div class="overlay">
+                <h5 class="overlay-title">{{ g.title }}</h5>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="row align-items-center justify-content-center mb-5 g-3">
+  <div class="col-md-2 text-center">
+    {% if self.image %}
+      {% image self.image width-400 class="img-fluid" alt=self.image.title loading="lazy" decoding="async" %}
+    {% else %}
+      <div class="text-muted small">(no image)</div>
+    {% endif %}
+  </div>
+
+  <div class="col-md-5 text-center">
+    <h2>{{ self.title }}</h2>
+    {% if self.summary %}<p class="text-muted">{{ self.summary }}</p>{% endif %}
+
+    <a href="{{ self.url }}"
+       class="btn nav-link text-center">
+       &gt; {{ self.link_label|default:"Explore" }}
+    </a>
+
+    {# open in a new tab if selected #}
+    <script>
+      (function () {
+        var a = document.currentScript.previousElementSibling;
+        {% if self.open_in_new_tab %}a.setAttribute('target','_blank'); a.setAttribute('rel','noopener noreferrer');{% endif %}
+      })();
+    </script>
+  </div>
+</div>

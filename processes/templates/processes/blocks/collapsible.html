@@ -1,0 +1,21 @@
+{% load wagtailcore_tags %}
+{% with collapse_id=self.slug|default:"collapse" %}
+<section class="mt-5 text-start" style="background-color:#f8f9fa; padding:15px; border-radius:5px;">
+  <h2 class="d-flex align-items-center">
+    <button class="btn btn-link text-decoration-none p-0"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#{{ collapse_id }}"
+            aria-expanded="{{ self.start_open|yesno:'true,false' }}"
+            aria-controls="{{ collapse_id }}"
+            style="font-size: inherit; font-weight: normal; color: inherit; text-align: left;">
+      {{ self.title }} &#9660;
+    </button>
+  </h2>
+  <div class="collapse {% if self.start_open %}show{% endif %}" id="{{ collapse_id }}">
+    <div class="mt-2 rich-text">
+      {{ self.body|richtext }}
+    </div>
+  </div>
+</section>
+{% endwith %}<br>

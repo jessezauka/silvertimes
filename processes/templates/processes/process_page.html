@@ -1,0 +1,46 @@
+{% extends "base_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+{% if page.banner_image %}
+<section class="banner-processes">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        {% image page.banner_image width-1600 class="img-fluid" alt=page.banner_image.title loading="lazy" decoding="async" %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<div class="container my-5 d-flex" style="max-width: 900px;">
+  <main class="flex-grow-1">
+    <article>
+      <header class="text-start">
+        <h1>{{ page.title }}</h1>
+        {% if page.search_description %}
+          <p class="mt-4">{{ page.search_description }}</p>
+        {% endif %}
+        <p class="text-muted">
+          {% if page.author_name %}<strong>Author:</strong> {{ page.author_name }} |{% endif %}
+          <strong>Published:</strong> {{ page.date|date:"F j, Y" }}
+        </p>
+      </header>
+
+      {# intro rich text, optional #}
+      {% if page.body %}
+      <section class="mt-5 text-start rich-text">
+        {{ page.body|richtext }}
+      </section>
+      {% endif %}
+
+      {# ✅ render StreamField blocks here #}
+      {% for block in page.sections %}
+        {% include_block block %}
+      {% endfor %}
+
+    </article>
+  </main>
+</div>
+{% endblock %}

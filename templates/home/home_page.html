@@ -1,0 +1,103 @@
+{% extends "base_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+{# ================= Banner ================= #}
+{% if page.banner_image %}
+  <div class="container my-4">
+    <section class="banner text-center">
+      {% image page.banner_image width-2400 class="img-fluid" alt=page.title %}
+    </section>
+  </div>
+{% endif %}
+
+{# ================ Intro copy =============== #}
+<section class="homepage-intro container" style="max-width:900px;">
+  <h2 class="text-center">Welcome to SilverTimes.ART</h2>
+  {% if page.intro %}
+    <div class="mt-4 w-100 rich-text">
+      {{ page.intro|richtext }}
+    </div>
+  {% endif %}
+</section>
+
+<section class="latest-blogs container" style="max-width: 925px;">
+    <h2 class="text-center mb-4">Latest Blog Posts</h2>
+    <div class="row g-3">
+        {% for post in latest_posts %}
+          <div class="col-md-4">
+            <div class="card border-0 shadow-none text-decoration-none d-block text-dark">
+                            {% with img=post.specific.listing_image %}
+                  {% if img %}
+                    <div class="ratio ratio-1x1 rounded-3 overflow-hidden">
+                      {% image img fill-289x289 style="object-fit:cover;" alt=post.title loading="lazy" decoding="async" %}
+                    </div>
+                  {% endif %}
+                {% endwith %}
+                
+                <div class="card-body">
+                  <h5 class="card-title">{{ post.title }}</h5>
+                  {% if post.specific.display_excerpt %}
+                    <p class="card-text">{{ post.specific.display_excerpt }}</p>
+                  {% endif %}<a href="{% pageurl post %}" class="text-decoration-none">
+                  <span class="btn nav-link ">&gt; Read More</span></a>
+                </div> 
+             
+            </div>
+          </div>
+        {% empty %}
+          <p class="text-center text-muted">No blog posts yet.</p>
+        {% endfor %}
+    </div>
+</section>
+
+
+{# ======= Explore the Galleries (3) ======== #}
+<section class="galleries-preview container my-5" style="max-width:925px;">
+  <h2 class="text-center mb-4">Explore the Galleries</h2>
+  <div class="row g-3">
+    {% for gal in latest_galleries %}
+      <div class="col-12 col-sm-6 col-md-4">
+        <a href="{% pageurl gal %}" class="gallery-card d-block text-decoration-none">
+          <div class="ratio ratio-1x1 rounded-3 overflow-hidden position-relative">
+            {% with cover=gal.specific.cover_image first=gal.specific.images.first %}
+              {% if cover %}
+                {% image cover fill-800x800 class="w-100 h-100" style="object-fit:cover;" alt=gal.title loading="lazy" decoding="async" %}
+              {% elif first %}
+                {% image first.image fill-800x800 class="w-100 h-100" style="object-fit:cover;" alt=gal.title loading="lazy" decoding="async" %}
+              {% endif %}
+            {% endwith %}
+            <div class="overlay d-flex justify-content-center align-items-center">
+                            <i class="fas fa-search-plus fa-2x text-white"></i>
+                        </div>
+          </div>
+        </a>
+      </div>
+    {% empty %}
+      <p class="text-center text-muted">No galleries yet.</p>
+    {% endfor %}
+  </div>
+</section>
+
+{# ======== Create Your Account section ======= #}
+<section class="register-section container my-5 py-5" style="max-width:925px;">
+  <h2 class="text-center mb-4">Create Your Account</h2>
+  <div class="row align-items-center">
+    <div class="col-md-6">
+      {% if page.register_image %}
+        {% image page.register_image width-900 class="img-fluid rounded" alt="Register" loading="lazy" decoding="async" %}
+      {% endif %}
+    </div>
+    <div class="col-md-6">
+      {# Keep a simple button; link is configurable on the page #}
+      <div class="text-start pt-3">
+        <a class="btn btn-dark btn-lg" href="{{ page.register_link_url|default:'/reg/' }}">
+          <i class="fas fa-user-plus me-2"></i> Register
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

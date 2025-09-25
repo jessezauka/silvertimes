@@ -1,0 +1,44 @@
+{% extends "base_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<div class="container gallery-container pt-5 tz-gallery">
+  <h1 class="gallery-page">{{ page.title }}</h1>
+
+  {# richtext may include block elements, so avoid nesting inside <p> #}
+  {% if page.intro %}
+    <div class="page-description text-center">
+      {{ page.intro|richtext }}
+    </div>
+  {% endif %}
+
+  <!-- Gallery Items -->
+  <div class="row justify-content-center g-4">
+    {% for item in page.images.all %}
+      {% image item.image original as full %}
+
+      {# alt fallback: item.alt_text -> image.description -> image.title #}
+      {% with item.alt_text|default:item.image.description|default:item.image.title as alt_text %}
+        <div class="col-12">
+          <figure class="text-center m-0">
+            <a href="{{ full.url }}">
+              {% image item.image width-800 class="img-fluid w-50" alt=alt_text loading="lazy" decoding="async" %}
+            </a>
+            <figcaption class="mt-2 text-muted">
+              <strong>Title: {{ item.image.title }}</strong><br>
+              {{ item.image.description|default:item.caption }}
+            </figcaption>
+          </figure>
+        </div>
+      {% endwith %}
+    {% empty %}
+      <div class="col-12 text-center text-muted">No images yet.</div>
+    {% endfor %}
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.1/baguetteBox.min.js"></script>
+    <script>
+        // Initialize the lightbox for the gallery
+        baguetteBox.run('.tz-gallery');
+    </script>
+{% endblock %}

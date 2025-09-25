@@ -1,0 +1,21 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="row align-items-center mb-5 text-start">
+  {% if self.image_position == 'left' %}
+    <div class="col-md-{% if self.image_fraction == '3' %}3{% elif self.image_fraction == '6' %}6{% elif self.image_fraction == '4' %}4{% else %}4{% endif %}">
+      {% image self.image width-900 class="img-fluid rounded mb-3" alt=self.image.title loading="lazy" decoding="async" %}
+    </div>
+    <div class="col-md-{% if self.image_fraction == '3' %}9{% elif self.image_fraction == '6' %}6{% elif self.image_fraction == '4' %}8{% else %}8{% endif %}">
+      {% if self.heading %}<h2>{{ self.heading }}</h2>{% endif %}
+      <div class="rich-text">{{ self.text|richtext }}</div>
+    </div>
+  {% else %}
+    <div class="col-md-{% if self.image_fraction == '3' %}9{% elif self.image_fraction == '6' %}6{% elif self.image_fraction == '4' %}8{% else %}8{% endif %}">
+      {% if self.heading %}<h2>{{ self.heading }}</h2>{% endif %}
+      <div class="rich-text">{{ self.text|richtext }}</div>
+    </div>
+    <div class="col-md-{% if self.image_fraction == '3' %}3{% elif self.image_fraction == '6' %}6{% elif self.image_fraction == '4' %}4{% else %}4{% endif %}">
+      {% image self.image width-900 class="img-fluid rounded mb-3" alt=self.image.title loading="lazy" decoding="async" %}
+    </div>
+  {% endif %}
+</section>

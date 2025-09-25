@@ -1,0 +1,17 @@
+
+{% load wagtailcore_tags wagtailsettings_tags static %}
+{% wagtail_site as current_site %}
+{% load wagtailsettings_tags wagtailcore_tags %}
+{% get_settings %}
+
+
+<!-- Footer Section -->
+    <footer class="navbar navbar-expand-lg navbar-light bg-white py-3">
+        <div class="container justify-content-center">
+            <span class="text-dark text-center w-100">{{ settings.galleries.SiteFooterSettings.footer_html|richtext }}</span>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/javascript.js' %}"></script>

@@ -1,0 +1,7 @@
+{% load wagtailimages_tags %}
+<section class="mt-5 text-center">
+  {% image self.image width-1600 class="img-fluid w-100" alt=self.image.title loading="lazy" decoding="async" %}
+  {% if self.caption %}
+    <p class="mt-2 text-muted"><em>{{ self.caption }}</em></p>
+  {% endif %}
+</section>

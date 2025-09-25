@@ -1,0 +1,78 @@
+{% extends "base_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+{# Banner #}
+{% if page.banner_image %}
+<section class="banner-blog">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        {% image page.banner_image width-1600 class="img-fluid" alt=page.banner_image.title loading="lazy" decoding="async" %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="blog-posts mt-5">
+  <div class="container">
+
+    
+
+    {% for post in posts %}
+    <div class="d-flex justify-content-center mb-4">
+      <div class="row w-100 justify-content-center" style="max-width: 925px;">
+        <div class="col-12 col-md-4">
+          {% if post.thumbnail %}
+            {% image post.thumbnail fill-284x284 class="img-fluid w-100" alt=post.thumbnail.title loading="lazy" decoding="async" %}
+          {% else %}
+            <div class="bg-light rounded-2" style="height: 220px;"></div>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-8 text-start">
+          <p class="text-muted mb-1">
+            {{ post.date|date:"F j, Y" }}
+            {% if post.author_name %}| by {{ post.author_name }}{% endif %}
+            {% if post.categories.all %}
+              | Category:
+              {% for c in post.categories.all %}<a href="{{ post.get_parent.url }}?category={{ c.slug }}" class="text-decoration-none" style="color: #333;">{{ c.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+            {% endif %}
+          </p>
+          <h2 class="h3 mb-2"><a href="{{ post.url }}" class="text-decoration-none text-dark">{{ post.title }}</a></h2>
+          <p class="text-muted mb-2">{{ post.display_excerpt }}</p>
+          <a href="{{ post.url }}" class="btn nav-link text-start">&gt; Read More</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p class="text-center text-muted">No posts yet.</p>
+    {% endfor %}
+
+    {# Pagination #}
+    {% if posts.paginator.num_pages > 1 %}
+      <div role="navigation" aria-label="Blog pagination" class="d-flex justify-content-center">
+        <ul class="pagination">
+          {% if posts.has_previous %}
+            <li class="page-item">
+              <a class="page-link text-dark" href="?page={{ posts.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}">Previous</a>
+            </li>
+          {% endif %}
+          {% for i in posts.paginator.page_range %}
+            <li class="page-item {% if posts.number == i %}active{% endif %}">
+              <a class="page-link text-dark" href="?page={{ i }}{% if current_category %}&category={{ current_category }}{% endif %}">{{ i }}</a>
+            </li>
+          {% endfor %}
+          {% if posts.has_next %}
+            <li class="page-item">
+              <a class="page-link text-dark" href="?page={{ posts.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}">Next</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

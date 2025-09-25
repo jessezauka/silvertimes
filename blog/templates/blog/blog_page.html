@@ -1,0 +1,59 @@
+{% extends "base_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+{# ===== Banner Section ===== #}
+{% if page.banner_image %}
+<section class="banner-blog">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        {% image page.banner_image width-1600 class="img-fluid" alt=page.banner_image.title loading="lazy" decoding="async" %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ===== Main Content Section (matches max-width + layout) ===== #}
+<div class="container my-5 d-flex" style="max-width: 900px;">
+  <main class="flex-grow-1">
+    <article>
+
+      {# ---- Article Header ---- #}
+      <header class="text-start">
+        <div class="meta-info mb-5 text-muted">
+          {% if page.date %}
+            <span><strong>Date:</strong> {{ page.date|date:"F j, Y" }}</span>
+          {% endif %}
+          {% if page.categories.all %}
+            {% if page.date %} | {% endif %}
+            <span>
+              <strong>Category:</strong>
+              {% for c in page.categories.all %}
+                {{ c.name }}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </span>
+          {% endif %}
+          {% if page.author_name %}
+            {% if page.date or page.categories.all %} | {% endif %}
+            <span><strong>Author:</strong> {{ page.author_name }}</span>
+          {% endif %}
+        </div>
+
+        <h1 class="mb-3">{{ page.title }}</h1>
+        {# Optional short intro: if you add a "subtitle" or "intro" field later, print it here #}
+        {# <p class="mt-4">{{ page.intro }}</p> #}
+      </header>
+
+      {# ---- Article Body ---- #}
+      <section class="mt-5 text-start rich-text">
+        {{ page.body|richtext }}
+      </section>
+
+    </article>
+  </main>
+</div>
+
+{% endblock %}

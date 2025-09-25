@@ -1,0 +1,108 @@
+{% extends "base_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+{# ===== Main Content ===== #}
+<main class="content container my-5" style="max-width: 930px;">
+  <section class="text-center">
+    <h1 class="mb-4">{{ page.title }}</h1>
+
+    {# Image full width #}
+    <div class="row py-3">
+      <div class="col-12">
+        {% if page.main_image %}
+        {% image page.main_image width-1600 as img_small %}
+        {% image page.main_image width-2400 as img_large %}
+        <img
+          src="{{ img_small.url }}"
+          width="{{ img_small.width }}" height="{{ img_small.height }}"
+          class="img-fluid d-block mx-auto"
+          style="width:100%;cursor:zoom-in;"
+          onclick="openModal('{{ img_large.url }}')"
+          oncontextmenu="return false;"
+          alt="{{ page.title }}" loading="lazy" decoding="async">
+      {% endif %}
+
+      </div>
+    </div>
+
+    <!-- Modal -->
+            <div id="imageModal" class="modal" onclick="closeModal()" style="display:none;">
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+                <img class="modal-content" id="modalImage" style="width: 100%; height: 100%; object-fit: contain; background-color: black;" oncontextmenu="return false;">
+            </div>
+
+    {# Details below image #}
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8">
+        <div class="text-block mt-4 text-center">
+          {% if page.format %}<p><strong>Format:</strong> {{ page.format }}</p>{% endif %}
+          {% if page.date_created %}<p><strong>Date:</strong> {{ page.date_created|date:"F j, Y" }}</p>{% endif %}
+          {% if page.technique %}<p><strong>Technique:</strong> {{ page.technique }}</p>{% endif %}
+          {% if page.price_label %}<p><strong>Price:</strong> €{{ page.price_label }}</p>{% endif %}
+          {% if page.description %}<div class="rich-text mt-3">{{ page.description|richtext }}</div>{% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Primary Order Button -->
+      <div class="card-body text-center">
+        <h1 class="card-title text-dark">
+          Complete Order Form
+        </h1>
+        <p class="card-text">Use our secure order form with payment processing:</p>
+        <a class="btn btn-dark btn-lg" href="/orders/create/?item_id={{ page.id }}">
+          Place Order Now
+        </a>
+      </div>
+    
+{# ===== Order Section ===== #}
+<section class="container my-5 d-flex justify-content-center" style="max-width: 900px;">
+  <div class="w-100" style="max-width: 500px;">
+    <h1 class="text-center">{{ page.order_cta_text|default:"Order Now" }}</h1>
+    <p class="mt-4 fs-4 text-center">
+      Feel free to contact me to place an order or inquire about this print:
+    </p>
+
+    {% if page.order_target_url %}
+      <div class="d-flex justify-content-center mb-4">
+        <a class="btn btn-dark" href="{{ page.order_target_url }}" rel="nofollow noopener" target="_blank">
+          <i class="fas fa-external-link-alt"></i> Continue to Order
+        </a>
+      </div>
+      <p class="text-center text-muted small">or use the contact form below.</p>
+    {% endif %}
+
+    {# Simple inline form (placeholder). Replace with a Wagtail FormPage for backend handling. #}
+    <form action="/api/printshop/order" method="POST" class="mt-4">
+      {% csrf_token %}
+      <input type="hidden" name="item_title" value="{{ page.title }}">
+      <div class="mb-3">
+        <label for="name" class="form-label visually-hidden">Name</label>
+        <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required maxlength="100">
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label visually-hidden">Email</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
+      </div>
+      <div class="mb-3">
+        <label for="phone" class="form-label visually-hidden">Phone</label>
+        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Your Phone (optional)" maxlength="20">
+      </div>
+      <div class="mb-3">
+        <label for="message" class="form-label visually-hidden">Message</label>
+        <textarea class="form-control" id="message" name="message" rows="5" placeholder="Additional notes or special requests" maxlength="1000"></textarea>
+      </div>
+      <div class="d-flex justify-content-center">
+        <button type="submit" class="btn btn-dark w-50">
+          <i class="fas fa-paper-plane"></i> Order
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+
+{% endblock %}

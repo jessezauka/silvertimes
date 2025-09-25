@@ -1,0 +1,74 @@
+{% extends "base_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+{# ===== Banner Section ===== #}
+{% if page.banner_image %}
+<section class="banner-printshop">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        {% image page.banner_image width-1600 class="img-fluid" alt=page.banner_image.title loading="lazy" decoding="async" %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ===== Intro & Grid ===== #}
+<section class="latest-blogs container my-5 py-5" style="max-width: 925px;">
+  <h1 class="mb-3">Printshop</h1>
+  {% if page.intro %}
+    <div class="mb-5 rich-text">{{ page.intro|richtext }}</div>
+  {% else %}
+    <p class="mb-5">Purchase unique fine art photography prints.</p>
+  {% endif %}
+
+  {# Grid of items (cards) #}
+  <div class="row g-3 mb-3">
+    {% for item in items %}
+      <div class="col-md-4">
+        <div class="card border-0 shadow-none h-100">
+          {% if item.main_image %}
+              {% image item.main_image fill-290x290 class="card-img-top" alt=item.title loading="lazy" decoding="async" %}
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title mb-2">
+              {{ item.title }}
+            </h5>
+            <p>{{ item.short_description|richtext }}</p>
+            <a href="{{ item.url }}" class="btn nav-link p-0">&gt;Order</a>
+          </div>
+        </div>
+      </div>
+      {% if forloop.counter|divisibleby:3 and not forloop.last %}
+        </div><div class="row g-3 mb-3">
+      {% endif %}
+    {% empty %}
+      <div class="col">
+        <p>No prints available yet. Please check back soon.</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{# ===== Contact CTA (optional) ===== #}
+<section class="container my-5" style="max-width: 930px;">
+  <h1>Get in Touch</h1>
+  <p class="mt-4 fs-4">Feel free to contact me to place an order or inquire about my work:</p>
+
+  <div class="row align-items-center">
+    <div class="col-md-6">
+      {# If you use a Wagtail FormPage, link to it here instead of an inline form #}
+      <a href="/contact/" class="btn btn-dark">Contact form</a>
+    </div>
+    <div class="col-md-6 text-start">
+      <ul class="list-unstyled fs-4">
+        <li><i class="fas fa-envelope mb-3"></i> Email: info@silvertimes.art</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

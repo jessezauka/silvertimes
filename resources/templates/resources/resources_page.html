@@ -1,0 +1,36 @@
+{% extends "base_page.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+{# Banner #}
+{% if page.banner_image %}
+<section class="banner-resources">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        {% image page.banner_image width-1600 class="img-fluid" alt=page.banner_image.title loading="lazy" decoding="async" %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<main class="container my-5">
+  <section class="homepage-intro">
+    <h1 class="text-center">{{ page.title }}</h1>
+    {% if page.intro %}
+      <p class="mt-4 mx-auto text-center" style="max-width: 900px;">{{ page.intro }}</p>
+    {% endif %}
+  </section>
+
+  <section class="blog-posts mt-5">
+    {% for block in page.sections %}
+      {% include_block block %}
+    {% empty %}
+      <p class="text-center text-muted">No resources yet.</p>
+    {% endfor %}
+  </section>
+</main>
+
+{% endblock %}
